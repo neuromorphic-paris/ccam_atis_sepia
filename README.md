@@ -1,37 +1,53 @@
-![ccamAtisSepia](ccamAtisSepiaBanner.png "The CCam ATIS Sepia banner")
+![ccamAtisSepia](banner.png "The CCam ATIS Sepia banner")
 
-# CCam ATIS Sepia
+CCam ATIS Sepia is an extension to the [Sepia](https://github.com/neuromorphic-paris/sepia) library to read events from a CCam ATIS.
 
-Ccam ATIS Sepia is an extension to the [Sepia](https://github.com/neuromorphic-paris/sepia) library to read events from a CCam ATIS.
+# Install
 
-# Installation
+Within a Git repository, run the commands:
 
-## Dependencies
-
-CCam ATIS Sepia depends on the [Sepia](https://github.com/neuromorphic-paris/sepia) library, which can be installed by executing the following commands from a terminal:
 ```sh
-git clone https://github.com/neuromorphic-paris/sepia.git
-cd sepia && premake4 install && cd .. && rm -rf sepia
+mkdir -p third_party
+cd third_party
+git submodule add https://github.com/neuromorphic-paris/opal_kelly_atis_sepia.git
+cd ..
 ```
-Moreover, CCam ATIS Sepia depends on [libusb](http://libusb.info), which can be installed by running:
-  - __Debian / Ubuntu__: `sudo apt-get install libusb-1.0`.
-  - __Fedora__: `sudo dnf install libusb`.
-  - __OS X__: `brew install libusb`.
 
-## Install
+CCam ATIS Sepia depends on [libusb](http://libusb.info). Follow these steps to install it:
+  - __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install libusb-1.0`.
+  - __OS X__: Open a terminal and execute the command `brew install libusb`. If the command is not found, you need to install Homebrew first with the command<br />
+  `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
 
-To install the source, go to the *ccamAtisSepia* directory and run `premake4 install`. The source is copied to */usr/local/include*.
-The firmwares are installed in */usr/local/share*. You need to be connected to the Vision Institute local network for this step to work, as it implies downloading close-source resources.
+# Contribute
 
-## Uninstall
+## Development dependencies
 
-To uninstall the library, run `premake4 uninstall` from the *ccamAtisSepia* directory.
+CCam ATIS Sepia relies on [Premake 4.x](https://github.com/premake/premake-4.x) (x ≥ 3) to generate build configurations. Follow these steps to install it:
+- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install premake4`.
+- __OS X__: Open a terminal and execute the command `brew install premake`. If the command is not found, you need to install Homebrew first with the command<br />
+`ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+
+[ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) is used to unify coding styles. Follow these steps to install it:
+- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install clang-format`.
+- __OS X__: Open a terminal and execute the command `brew install clang-format`. If the command is not found, you need to install Homebrew first with the command<br />
+`ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
 
 ## Test
 
-To test the library, run the following commands:
-  - Go to the *ccamAtisSepia* directory and run `premake4 gmake && cd build && make`.
-  - Run the executable *Release/ccamAtisSepiaTest*.
+To test the library, run from the *ccam_atis_sepia* directory:
+```sh
+premake4 gmake
+cd build
+make
+cd release
+./ccam_atis_sepia
+```
+
+After changing the code, format the source files by running from the *ccam_atis_sepia* directory:
+```sh
+clang-format -i source/ccam_atis_sepia.hpp
+clang-format -i test/ccam_atis_sepia.cpp
+```
 
 # User guides and documentation
 
