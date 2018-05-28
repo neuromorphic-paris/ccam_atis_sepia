@@ -255,11 +255,7 @@ namespace ccam_atis_sepia {
                 libusb_free_device_list(devices, 1);
                 if (!device_found) {
                     libusb_exit(_context);
-                    if (serial == 0) {
-                        throw std::runtime_error("there are no CCam ATIS connected or they are all busy");
-                    } else {
-                        throw std::runtime_error("the CCam ATIS with the given serial is not connected or it is busy");
-                    }
+                    throw sepia::no_device_connected("CCam ATIS");
                 }
             }
 
@@ -351,7 +347,7 @@ namespace ccam_atis_sepia {
                                     event.polarity = ((*std::next(byte_iterator, 3) & 0b10000) >> 4) == 1;
                                     event.is_threshold_crossing = ((*std::next(byte_iterator, 3) & 0b100000) >> 5) == 1;
                                     if (!this->push(event)) {
-                                        throw std::runtime_error("Computer's FIFO overflow");
+                                        throw std::runtime_error("computer's FIFO overflow");
                                     }
                                 }
                             }
