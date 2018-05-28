@@ -13,7 +13,7 @@ namespace ccam_atis_sepia {
         public:
         /// available_serials returns the connected CCam ATIS cameras' serials.
         static std::unordered_set<uint16_t> available_serials() {
-            auto serials = std::unordered_set<uint16_t>{};
+            std::unordered_set<uint16_t> serials;
             libusb_context* context;
             check_usb_error(libusb_init(&context), "initialize the USB context");
             libusb_device** devices;
@@ -120,53 +120,52 @@ namespace ccam_atis_sepia {
         static std::
             unordered_map<std::string, std::unordered_map<std::string, std::unordered_map<std::string, uint32_t>>>
             configuration() {
-            return std::
-                unordered_map<std::string, std::unordered_map<std::string, std::unordered_map<std::string, uint32_t>>>({
-                    {"change_detection",
-                     {
-                         {"reset_switch_bulk_potential", {{"address", 0x02}, {"tension", 0x5900}}},
-                         {"photoreceptor_feedback", {{"address", 0x03}, {"tension", 0x5900}}},
-                         {"refractory_period", {{"address", 0x04}, {"tension", 0x5900}}},
-                         {"follower", {{"address", 0x05}, {"tension", 0x5900}}},
-                         {"event_source_amplifier", {{"address", 0x06}, {"tension", 0x7900}}},
-                         {"on_event_threshold", {{"address", 0x07}, {"tension", 0x7900}}},
-                         {"off_event_threshold", {{"address", 0x08}, {"tension", 0x7900}}},
-                         {"off_event_inverter", {{"address", 0x09}, {"tension", 0x7900}}},
-                         {"cascode_photoreceptor_feedback", {{"address", 0x0a}, {"tension", 0x7900}}},
-                     }},
-                    {"exposure_measurement",
-                     {
-                         {"comparator_tail", {{"address", 0x0b}, {"tension", 0x7900}}},
-                         {"comparator_hysteresis", {{"address", 0x0c}, {"tension", 0x7900}}},
-                         {"comparator_output_stage", {{"address", 0x0d}, {"tension", 0x7900}}},
-                         {"upper_threshold", {{"address", 0x0e}, {"tension", 0x5900}}},
-                         {"lower_threshold", {{"address", 0x0f}, {"tension", 0x5900}}},
-                     }},
-                    {"pullup",
-                     {
-                         {"exposure_measurement_abscissa_request", {{"address", 0x10}, {"tension", 0x5900}}},
-                         {"exposure_measurement_ordinate_request", {{"address", 0x11}, {"tension", 0x5900}}},
-                         {"change_detection_abscissa_request", {{"address", 0x12}, {"tension", 0x5900}}},
-                         {"change_detection_ordinate_request", {{"address", 0x13}, {"tension", 0x7900}}},
-                         {"abscissa_acknoledge", {{"address", 0x14}, {"tension", 0x5900}}},
-                         {"abscissa_encoder", {{"address", 0x15}, {"tension", 0x5900}}},
-                         {"ordinate_encoder", {{"address", 0x16}, {"tension", 0x7900}}},
-                     }},
-                    {"control",
-                     {
-                         {"exposure_measurement_timeout", {{"address", 0x17}, {"tension", 0x7900}}},
-                         {"sequential_exposure_measurement_timeout", {{"address", 0x18}, {"tension", 0x7900}}},
-                         {"abscissa_acknoledge_timeout", {{"address", 0x19}, {"tension", 0x7900}}},
-                         {"latch_cell_scan_pulldown", {{"address", 0x1a}, {"tension", 0x5900}}},
-                         {"abscissa_request_pulldown", {{"address", 0x1b}, {"tension", 0x7900}}},
-                     }},
-                    {"static",
-                     {
-                         {"reset_t", {{"address", 0x00}, {"tension", 0x5900}, {"value", 0}}},
-                         {"test_event", {{"address", 0x01}, {"tension", 0x7900}, {"value", 0}}},
-                         {"reset_photodiodes", {{"address", 0x1c}, {"tension", 0x00}, {"value", 3}}},
-                     }},
-                });
+            return {
+                {"change_detection",
+                 {
+                     {"reset_switch_bulk_potential", {{"address", 0x02}, {"tension", 0x5900}}},
+                     {"photoreceptor_feedback", {{"address", 0x03}, {"tension", 0x5900}}},
+                     {"refractory_period", {{"address", 0x04}, {"tension", 0x5900}}},
+                     {"follower", {{"address", 0x05}, {"tension", 0x5900}}},
+                     {"event_source_amplifier", {{"address", 0x06}, {"tension", 0x7900}}},
+                     {"on_event_threshold", {{"address", 0x07}, {"tension", 0x7900}}},
+                     {"off_event_threshold", {{"address", 0x08}, {"tension", 0x7900}}},
+                     {"off_event_inverter", {{"address", 0x09}, {"tension", 0x7900}}},
+                     {"cascode_photoreceptor_feedback", {{"address", 0x0a}, {"tension", 0x7900}}},
+                 }},
+                {"exposure_measurement",
+                 {
+                     {"comparator_tail", {{"address", 0x0b}, {"tension", 0x7900}}},
+                     {"comparator_hysteresis", {{"address", 0x0c}, {"tension", 0x7900}}},
+                     {"comparator_output_stage", {{"address", 0x0d}, {"tension", 0x7900}}},
+                     {"upper_threshold", {{"address", 0x0e}, {"tension", 0x5900}}},
+                     {"lower_threshold", {{"address", 0x0f}, {"tension", 0x5900}}},
+                 }},
+                {"pullup",
+                 {
+                     {"exposure_measurement_abscissa_request", {{"address", 0x10}, {"tension", 0x5900}}},
+                     {"exposure_measurement_ordinate_request", {{"address", 0x11}, {"tension", 0x5900}}},
+                     {"change_detection_abscissa_request", {{"address", 0x12}, {"tension", 0x5900}}},
+                     {"change_detection_ordinate_request", {{"address", 0x13}, {"tension", 0x7900}}},
+                     {"abscissa_acknoledge", {{"address", 0x14}, {"tension", 0x5900}}},
+                     {"abscissa_encoder", {{"address", 0x15}, {"tension", 0x5900}}},
+                     {"ordinate_encoder", {{"address", 0x16}, {"tension", 0x7900}}},
+                 }},
+                {"control",
+                 {
+                     {"exposure_measurement_timeout", {{"address", 0x17}, {"tension", 0x7900}}},
+                     {"sequential_exposure_measurement_timeout", {{"address", 0x18}, {"tension", 0x7900}}},
+                     {"abscissa_acknoledge_timeout", {{"address", 0x19}, {"tension", 0x7900}}},
+                     {"latch_cell_scan_pulldown", {{"address", 0x1a}, {"tension", 0x5900}}},
+                     {"abscissa_request_pulldown", {{"address", 0x1b}, {"tension", 0x7900}}},
+                 }},
+                {"static",
+                 {
+                     {"reset_t", {{"address", 0x00}, {"tension", 0x5900}, {"value", 0}}},
+                     {"test_event", {{"address", 0x01}, {"tension", 0x7900}, {"value", 0}}},
+                     {"reset_photodiodes", {{"address", 0x1c}, {"tension", 0x00}, {"value", 3}}},
+                 }},
+            };
         }
 
         camera() {}

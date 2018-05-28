@@ -9,8 +9,8 @@ Within a Git repository, run the commands:
 ```sh
 mkdir -p third_party
 cd third_party
-git submodule add https://github.com/neuromorphic-paris/opal_kelly_atis_sepia.git
-cd ..
+git submodule add https://github.com/neuromorphic-paris/ccam_atis_sepia.git
+git submodule update --init --recursive
 ```
 
 CCam ATIS Sepia depends on [libusb](http://libusb.info). Follow these steps to install it:
