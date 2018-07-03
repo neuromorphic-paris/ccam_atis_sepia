@@ -7,8 +7,7 @@ solution 'ccam_atis_sepia'
         location 'build'
         files {'source/*.hpp', 'test/*.cpp'}
         links {'usb-1.0'}
-        buildoptions {'-std=c++11'}
-        linkoptions {'-std=c++11'}
+        defines {'SEPIA_COMPILER_WORKING_DIRECTORY="' .. project().location .. '"'}
         configuration 'release'
             targetdir 'build/release'
             defines {'NDEBUG'}
@@ -19,6 +18,10 @@ solution 'ccam_atis_sepia'
             flags {'Symbols'}
         configuration 'linux'
             links {'pthread'}
+            buildoptions {'-std=c++11'}
+            linkoptions {'-std=c++11'}
         configuration 'macosx'
             includedirs {'/usr/local/include'}
             libdirs {'/usr/local/lib'}
+            buildoptions {'-std=c++11'}
+            linkoptions {'-std=c++11'}
