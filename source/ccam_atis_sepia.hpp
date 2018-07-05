@@ -15,7 +15,7 @@ namespace ccam_atis_sepia {
         static std::unordered_set<uint16_t> available_serials() {
             std::unordered_set<uint16_t> serials;
             libusb_context* context;
-            check_usb_error(libusb_init(&context), "initialize the USB context");
+            check_usb_error(libusb_init(&context), "initializing the USB context");
             libusb_device** devices;
             const auto count = libusb_get_device_list(context, &devices);
             for (std::size_t index = 0; index < count; ++index) {
@@ -23,12 +23,12 @@ namespace ccam_atis_sepia {
                 if (libusb_get_device_descriptor(devices[index], &descriptor) == 0) {
                     if (descriptor.idVendor == 1204 && descriptor.idProduct == 244) {
                         libusb_device_handle* handle;
-                        check_usb_error(libusb_open(devices[index], &handle), "open the device");
+                        check_usb_error(libusb_open(devices[index], &handle), "opening the device");
                         if (libusb_claim_interface(handle, 0) == 0) {
                             auto data = std::array<uint8_t, 8>{};
                             check_usb_error(
                                 libusb_control_transfer(handle, 192, 85, 32, 0, data.data(), data.size(), 0),
-                                "send control packet");
+                                "sending a control packet");
                             libusb_release_interface(handle, 0);
                             serials.insert((static_cast<uint16_t>(data[6]) << 8) | static_cast<uint16_t>(data[7]));
                         }
@@ -107,12 +107,12 @@ namespace ccam_atis_sepia {
         }
 
         /// width returns the sensor width.
-        static constexpr std::size_t width() {
+        static constexpr uint16_t width() {
             return 304;
         }
 
         /// height returns the sensor height.
-        static constexpr std::size_t height() {
+        static constexpr uint16_t height() {
             return 240;
         }
 
@@ -168,7 +168,7 @@ namespace ccam_atis_sepia {
             };
         }
 
-        camera() {}
+        camera() = default;
         camera(const camera&) = delete;
         camera(camera&&) = default;
         camera& operator=(const camera&) = delete;
@@ -219,7 +219,7 @@ namespace ccam_atis_sepia {
             _parameter->parse_or_load(std::move(unvalidated_parameter));
 
             // initialize the context
-            check_usb_error(libusb_init(&_context), "initialize the USB context");
+            check_usb_error(libusb_init(&_context), "initializing the USB context");
 
             // find requested / available devices
             {
@@ -230,7 +230,7 @@ namespace ccam_atis_sepia {
                     libusb_device_descriptor descriptor;
                     if (libusb_get_device_descriptor(devices[index], &descriptor) == 0) {
                         if (descriptor.idVendor == 1204 && descriptor.idProduct == 244) {
-                            check_usb_error(libusb_open(devices[index], &_handle), "open the device");
+                            check_usb_error(libusb_open(devices[index], &_handle), "opening the device");
                             if (libusb_claim_interface(_handle, 0) == 0) {
                                 if (serial == 0) {
                                     device_found = true;
@@ -239,7 +239,7 @@ namespace ccam_atis_sepia {
                                     auto data = std::array<uint8_t, 8>{};
                                     check_usb_error(
                                         libusb_control_transfer(_handle, 192, 85, 32, 0, data.data(), data.size(), 0),
-                                        "send control packet");
+                                        "sending a control packet");
                                     if ((serial & 0xff) == data[6] && ((serial & 0xff00) >> 8) == data[7]) {
                                         device_found = true;
                                         break;
@@ -262,9 +262,9 @@ namespace ccam_atis_sepia {
             _transfer = libusb_alloc_transfer(0);
 
             // send setup commands to the camera
-            check_usb_error(libusb_reset_device(_handle), "reset the device");
-            send_command(_handle, 0x01a, {0, 0, 0x00, 0x01}, "set the role");
-            send_command(_handle, 0x41a, {0, 0, 0x00, 0x02}, "set the role");
+            check_usb_error(libusb_reset_device(_handle), "resetting the device");
+            send_command(_handle, 0x01a, {0, 0, 0x00, 0x01}, "setting the role");
+            send_command(_handle, 0x41a, {0, 0, 0x00, 0x02}, "setting the role");
             {
                 auto data = std::vector<uint8_t>{};
                 for (const auto& category_pair : configuration()) {
@@ -296,9 +296,9 @@ namespace ccam_atis_sepia {
                     }
                 }
                 check_usb_error(
-                    libusb_control_transfer(_handle, 64, 97, 0, 0, data.data(), data.size(), 0), "load the biases");
+                    libusb_control_transfer(_handle, 64, 97, 0, 0, data.data(), data.size(), 0), "loading the biases");
                 check_usb_error(
-                    libusb_control_transfer(_handle, 64, 98, 0, 0, data.data(), data.size(), 0), "load the biases");
+                    libusb_control_transfer(_handle, 64, 98, 0, 0, data.data(), data.size(), 0), "loading the biases");
             }
             send_command(_handle, 0x00a, {0, 0, 0x00, 0x40}, "flush the biases");
             send_command(_handle, 0x40a, {0, 0, 0x00, 0x40}, "flush the biases");
