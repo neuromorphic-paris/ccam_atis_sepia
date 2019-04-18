@@ -1,4 +1,4 @@
-![ccamAtisSepia](banner.png "The CCam ATIS Sepia banner")
+![banner](banner.png)
 
 CCam ATIS Sepia is an extension to the [Sepia](https://github.com/neuromorphic-paris/sepia) library to read events from a CCam ATIS.
 

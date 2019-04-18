@@ -12,8 +12,8 @@ namespace ccam_atis_sepia {
     class camera {
         public:
         /// available_serials returns the connected CCam ATIS cameras' serials.
-        static std::unordered_set<uint16_t> available_serials() {
-            std::unordered_set<uint16_t> serials;
+        static std::vector<uint16_t> available_serials() {
+            std::vector<uint16_t> serials;
             libusb_context* context;
             check_usb_error(libusb_init(&context), "initializing the USB context");
             libusb_device** devices;
@@ -30,7 +30,7 @@ namespace ccam_atis_sepia {
                                 libusb_control_transfer(handle, 192, 85, 32, 0, data.data(), data.size(), 0),
                                 "sending a control packet");
                             libusb_release_interface(handle, 0);
-                            serials.insert((static_cast<uint16_t>(data[6]) << 8) | static_cast<uint16_t>(data[7]));
+                            serials.push_back((static_cast<uint16_t>(data[6]) << 8) | static_cast<uint16_t>(data[7]));
                         }
                         libusb_close(handle);
                     }
