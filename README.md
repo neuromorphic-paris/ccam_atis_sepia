@@ -74,10 +74,6 @@ clang-format -i source/ccam_atis_sepia.hpp
 clang-format -i test/ccam_atis_sepia.cpp
 ```
 
-# user guides and documentation
-
-User guides and code documentation are held in the [wiki](https://github.com/neuromorphic-paris/ccamAtisSepia/wiki).
-
 # license
 
 See the [LICENSE](LICENSE.txt) file for license rights and limitations (GNU GPLv3).
