@@ -6,7 +6,6 @@ solution 'ccam_atis_sepia'
         language 'C++'
         location 'build'
         files {'source/*.hpp', 'test/*.cpp'}
-        links {'usb-1.0'}
         defines {'SEPIA_COMPILER_WORKING_DIRECTORY="' .. project().location .. '"'}
         configuration 'release'
             targetdir 'build/release'
@@ -17,11 +16,16 @@ solution 'ccam_atis_sepia'
             defines {'DEBUG'}
             flags {'Symbols'}
         configuration 'linux'
-            links {'pthread'}
+            links {'pthread', 'usb-1.0'}
             buildoptions {'-std=c++11'}
             linkoptions {'-std=c++11'}
         configuration 'macosx'
             includedirs {'/usr/local/include'}
             libdirs {'/usr/local/lib'}
+            links {'usb-1.0'}
             buildoptions {'-std=c++11'}
             linkoptions {'-std=c++11'}
+        configuration 'windows'
+            files {'.clang-format'}
+            includedirs {'C:\\Include'}
+            links {'C:\\Windows\\SysWOW64\\libusb-1.0'}

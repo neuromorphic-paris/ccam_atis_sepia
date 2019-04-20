@@ -18,7 +18,7 @@ namespace ccam_atis_sepia {
             check_usb_error(libusb_init(&context), "initializing the USB context");
             libusb_device** devices;
             const auto count = libusb_get_device_list(context, &devices);
-            for (std::size_t index = 0; index < count; ++index) {
+            for (ssize_t index = 0; index < count; ++index) {
                 libusb_device_descriptor descriptor;
                 if (libusb_get_device_descriptor(devices[index], &descriptor) == 0) {
                     if (descriptor.idVendor == 1204 && descriptor.idProduct == 244) {
@@ -27,7 +27,8 @@ namespace ccam_atis_sepia {
                         if (libusb_claim_interface(handle, 0) == 0) {
                             auto data = std::array<uint8_t, 8>{};
                             check_usb_error(
-                                libusb_control_transfer(handle, 192, 85, 32, 0, data.data(), data.size(), 0),
+                                libusb_control_transfer(
+                                    handle, 192, 85, 32, 0, data.data(), static_cast<uint16_t>(data.size()), 0),
                                 "sending a control packet");
                             libusb_release_interface(handle, 0);
                             serials.push_back((static_cast<uint16_t>(data[6]) << 8) | static_cast<uint16_t>(data[7]));
@@ -193,7 +194,9 @@ namespace ccam_atis_sepia {
             uint16_t w_value,
             std::array<uint8_t, 4> data,
             const std::string& message) {
-            check_usb_error(libusb_control_transfer(handle, 64, 86, w_value, 0, data.data(), data.size(), 0), message);
+            check_usb_error(
+                libusb_control_transfer(handle, 64, 86, w_value, 0, data.data(), static_cast<uint16_t>(data.size()), 0),
+                message);
         }
     };
 
@@ -226,7 +229,7 @@ namespace ccam_atis_sepia {
                 auto device_found = false;
                 libusb_device** devices;
                 const auto count = libusb_get_device_list(_context, &devices);
-                for (std::size_t index = 0; index < count; ++index) {
+                for (ssize_t index = 0; index < count; ++index) {
                     libusb_device_descriptor descriptor;
                     if (libusb_get_device_descriptor(devices[index], &descriptor) == 0) {
                         if (descriptor.idVendor == 1204 && descriptor.idProduct == 244) {
@@ -238,7 +241,15 @@ namespace ccam_atis_sepia {
                                 } else {
                                     auto data = std::array<uint8_t, 8>{};
                                     check_usb_error(
-                                        libusb_control_transfer(_handle, 192, 85, 32, 0, data.data(), data.size(), 0),
+                                        libusb_control_transfer(
+                                            _handle,
+                                            192,
+                                            85,
+                                            32,
+                                            0,
+                                            data.data(),
+                                            static_cast<uint16_t>(data.size()),
+                                            0),
                                         "sending a control packet");
                                     if ((serial & 0xff) == data[6] && ((serial & 0xff00) >> 8) == data[7]) {
                                         device_found = true;
@@ -296,9 +307,11 @@ namespace ccam_atis_sepia {
                     }
                 }
                 check_usb_error(
-                    libusb_control_transfer(_handle, 64, 97, 0, 0, data.data(), data.size(), 0), "loading the biases");
+                    libusb_control_transfer(_handle, 64, 97, 0, 0, data.data(), static_cast<uint16_t>(data.size()), 0),
+                    "loading the biases");
                 check_usb_error(
-                    libusb_control_transfer(_handle, 64, 98, 0, 0, data.data(), data.size(), 0), "loading the biases");
+                    libusb_control_transfer(_handle, 64, 98, 0, 0, data.data(), static_cast<uint16_t>(data.size()), 0),
+                    "loading the biases");
             }
             send_command(_handle, 0x00a, {0, 0, 0x00, 0x40}, "flush the biases");
             send_command(_handle, 0x40a, {0, 0, 0x00, 0x40}, "flush the biases");
